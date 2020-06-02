@@ -22,7 +22,7 @@ Usage of retagger:
 
 ## Installation
 
-*Option 1:*
+**Option 1:**
 
 1) Clone this repo
 2) run `make && make install`
@@ -35,11 +35,11 @@ export PATH=$PATH:/usr/local/bin
 EOF
 ```
 
-*Option 2:*
+**Option 2:**
 
 Just grab the binary from the releases section here :boom:
 
-*Windows Folks*
+**Windows Folks:**
 
 You will need to grab the zip file from the releases and put the binary wherever you feel the need :smile:
 
