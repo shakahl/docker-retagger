@@ -1,4 +1,4 @@
-package main
+package docker
 
 import (
 	"fmt"
@@ -6,12 +6,12 @@ import (
 	"sync"
 )
 
-func checkDocker() error {
+func CheckDocker() error {
 	_, err := exec.LookPath("docker")
 	return err
 }
 
-func updateImage(wg *sync.WaitGroup, o, n string) {
+func UpdateImage(wg *sync.WaitGroup, o, n string) {
 	if err := exec.Command("docker", "pull", o).Run(); err != nil {
 		fmt.Printf("error running docker pull on %s, %+v\n", o, err)
 	}

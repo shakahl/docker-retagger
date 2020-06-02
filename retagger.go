@@ -8,6 +8,9 @@ import (
 	"os"
 	"strings"
 	"sync"
+
+	"gitlab.encirca.auto.pioneer.com/jordangregory/retagger/pkg/docker"
+	"gitlab.encirca.auto.pioneer.com/jordangregory/retagger/pkg/images"
 )
 
 var origin, newOrigin, inFile string
@@ -20,8 +23,8 @@ func init() {
 }
 
 func main() {
-	var img *Image
-	d := make(map[*Image]string)
+	var img *images.Image
+	d := make(map[*images.Image]string)
 
 	if inFile != "" {
 		f, err := os.Open(inFile)
@@ -33,7 +36,7 @@ func main() {
 		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
 			split := strings.Split(scanner.Text(), " ")
-			img, err = parseImage(split[0])
+			img, err = images.ParseImage(split[0])
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -50,7 +53,7 @@ func main() {
 			log.Fatal("--new-origin flag must not be \"\"")
 		default:
 			var err error
-			img, err = parseImage(origin)
+			img, err = images.ParseImage(origin)
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -58,7 +61,7 @@ func main() {
 		}
 	}
 
-	if err := checkDocker(); err != nil {
+	if err := docker.CheckDocker(); err != nil {
 		log.Fatalf("docker does not appear to be installed, %+v", err)
 	}
 
@@ -81,7 +84,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		go updateImage(wg, originalImage, newImage)
+		go docker.UpdateImage(wg, originalImage, newImage)
 	}
 	wg.Wait()
 }

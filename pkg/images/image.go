@@ -1,4 +1,4 @@
-package main
+package images
 
 import (
 	"fmt"
@@ -8,10 +8,10 @@ import (
 
 type Image struct {
 	Registry string
-	User string
-	Name string
-	Tag string
-	Hash string
+	User     string
+	Name     string
+	Tag      string
+	Hash     string
 }
 
 func (I *Image) Marshal() (string, error) {
@@ -34,7 +34,7 @@ func (I *Image) Marshal() (string, error) {
 	}
 }
 
-func parseImage(image string) (*Image, error) {
+func ParseImage(image string) (*Image, error) {
 	img := &Image{}
 	r := regexp.MustCompile("^(((?P<Registry>[a-zA-Z0-9-_]+?(\\.[a-zA-Z0-9]+?)+?\\.[a-zA-Z]{2,})/)?((?P<Name>[a-zA-Z0-9-_]+?)|(?P<UserName>[a-zA-Z0-9-_]+?)/(?P<ImageName>[a-zA-Z-_]+?))((:(?P<Tag>[a-zA-Z0-9-_\\.]+?))|(@(?P<Hash>sha256:[a-z0-9]{64}))))$")
 	if r.MatchString(image) {
