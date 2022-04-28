@@ -13,7 +13,7 @@ test:
 
 .PHONY:build
 build:
-	@CGO_ENABLED=0 go build -o bin/retagger retagger.go
+	@CGO_ENABLED=0 go build -o bin/retagger main.go
 
 install:./bin/retagger
 	@mv ./bin/retagger /usr/local/bin/retagger
@@ -27,15 +27,15 @@ build_artifacts: build_linux build_windows build_darwin
 
 .PHONY: build_linux
 build_linux:
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/retagger retagger.go
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o bin/retagger main.go
 	@cd bin;tar -czf retagger_linux_amd64.tar.gz retagger;rm -f retagger
 
 .PHONY: build_windows
 build_windows:
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bin/retagger retagger.go
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -o bin/retagger main.go
 	@cd bin;tar -czf retagger_windows_amd64.tar.gz retagger;rm -f retagger
 
 .PHONY: build_darwin
 build_darwin:
-	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -o bin/retagger retagger.go
+	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -o bin/retagger main.go
 	@cd bin;tar -czf retagger_darwin_amd64.tar.gz retagger;rm -f retagger

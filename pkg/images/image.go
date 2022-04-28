@@ -3,7 +3,6 @@ package images
 import (
 	"fmt"
 	"regexp"
-	"strings"
 )
 
 type Image struct {
@@ -11,46 +10,44 @@ type Image struct {
 	User     string
 	Name     string
 	Tag      string
-	Hash     string
 }
 
 func (I *Image) Marshal() (string, error) {
 	if I.User != "" {
 		if I.Tag != "" {
 			return fmt.Sprintf("%s/%s/%s:%s", I.Registry, I.User, I.Name, I.Tag), nil
-		} else if I.Hash != "" {
-			return fmt.Sprintf("%s/%s/%s@%s", I.Registry, I.User, I.Name, I.Hash), nil
 		} else {
-			return "", fmt.Errorf("no Tag or Hash value found")
+			return "", fmt.Errorf("no Tag value found")
 		}
 	} else {
 		if I.Tag != "" {
 			return fmt.Sprintf("%s/%s:%s", I.Registry, I.Name, I.Tag), nil
-		} else if I.Hash != "" {
-			return fmt.Sprintf("%s/%s@%s", I.Registry, I.Name, I.Hash), nil
 		} else {
-			return "", fmt.Errorf("no Tag or Hash value found")
+			return "", fmt.Errorf("no Tag value found")
 		}
 	}
 }
 
 func ParseImage(image string) (*Image, error) {
 	img := &Image{}
-	r := regexp.MustCompile("^(((?P<Registry>[a-zA-Z0-9-_]+?(\\.[a-zA-Z0-9]+?)+?\\.[a-zA-Z]{2,})/)?((?P<Name>[a-zA-Z0-9-_]+?)|(?P<UserName>[a-zA-Z0-9-_]+?)/(?P<ImageName>[a-zA-Z-_]+?))((:(?P<Tag>[a-zA-Z0-9-_\\.]+?))|(@(?P<Hash>sha256:[a-z0-9]{64}))))$")
+	r := regexp.MustCompile(`(?P<Registry>[a-z0-9\-.]+\.[a-z0-9\-]+:?[0-9]*)?/?((?P<Name>[a-zA-Z0-9-_]+?)|(?P<UserName>[a-zA-Z0-9-_]+?)/(?P<ImageName>[a-zA-Z-_]+?))(:(?P<Tag>[a-zA-Z0-9-_\\.]+?)|)$`)
 	if r.MatchString(image) {
 		matches := r.FindStringSubmatch(image)
-		img.Registry = strings.TrimSuffix(matches[2], "/")
-		if matches[4] != "" {
-			img.Name = strings.TrimPrefix(matches[5], "/")
+		if matches[1] != "" {
+			img.Registry = matches[1]
 		} else {
-			img.User = strings.TrimPrefix(matches[6], "/")
-			img.Name = strings.TrimPrefix(matches[7], "/")
+			img.Registry = "docker.io"
 		}
-		if matches[9] != "" {
-			img.Tag = strings.TrimPrefix(matches[10], ":")
+		if matches[3] != "" {
+			img.Name = matches[3]
+		} else {
+			img.User = matches[4]
+			img.Name = matches[5]
 		}
-		if matches[11] != "" {
-			img.Hash = matches[12]
+		if matches[7] != "" {
+			img.Tag = matches[7]
+		} else {
+			img.Tag = "latest"
 		}
 		return img, nil
 	} else {

@@ -4,21 +4,12 @@ This tool allows you to pull, re-tag, and push the re-tagged docker images on ei
 
 ## Usage
 
-```bash
-Usage of retagger:
-  -image string
-        the original image to pull
-  -infile string
-        use an input file rather than one-off flags
-  -new-origin string
-        the origin to set the image to
-```
-
-| flag         | type   | required                                               | help                                                                                  | example                  |
-|--------------|--------|--------------------------------------------------------|---------------------------------------------------------------------------------------|--------------------------|
-| --image      | string | only if --infile is not used                           | The original image to pull                                                            | `golang:latest`          |
-| --new-origin | string | only if --infile is not used                           | The new repository you are pushing to                                                 | `my.awesome.docker.repo` |
-| --infile     | string | no, but takes preference over --image and --new-origin | A file with the original image and the new origin seperated by a space (one per line) | `infile.txt`             |
+| flag          | type   | required                              | help                                                    | example                  |
+|---------------|--------|---------------------------------------|---------------------------------------------------------|--------------------------|
+| --image       | string | only if --file is not used            | The original image to pull                              | `golang:latest`          |
+| --newregistry | string | only if --file is used                | The new repository you are pushing to                   | `my.awesome.docker.repo` |
+| --file        | string | no, but takes preference over --image | A file with the original images (one per line)          | `images.list.template`   |
+| --skiplogin   | bool   | no                                    | if you want continue without login in original registry | `true / false`           |
 
 ## Installation
 
